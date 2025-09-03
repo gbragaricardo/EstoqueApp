@@ -8,6 +8,8 @@
 
         public int ProductId { get; set; }
 
+        public Product Product { get; set; }
+
         // Enum para facilitar a seleção do tipo In/Out
         public MovementType Type { get; set; }
 

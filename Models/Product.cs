@@ -22,6 +22,7 @@
 
         //Categoria do produto, *caso possa haver varias deverá ser uma lista*
         public int CategoryId { get; set; }
+        public Category Category { get; set; }
 
         public List<StockMovement>  Movements { get; set; }
     }
