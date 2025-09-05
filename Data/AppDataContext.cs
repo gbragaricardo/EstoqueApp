@@ -14,7 +14,7 @@ namespace EstoqueApp.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=localhost,1433;Database=Estoque;User ID=sa;Password=Projeta24862");
+            optionsBuilder.UseSqlServer("Server=localhost,1433;Database=Estoque;User ID=sa;Password=Projeta24862;Encrypt=True;TrustServerCertificate=True");
             //optionsBuilder.LogTo(Console.WriteLine);
         }
 
