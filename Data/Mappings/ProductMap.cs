@@ -10,7 +10,11 @@ namespace EstoqueApp.Data.Mappings
         public void Configure(EntityTypeBuilder<Product> builder)
         {
             // Tabela do banco
-            builder.ToTable("Product");
+            builder.ToTable("Product", t =>
+            {
+                t.HasCheckConstraint("CK_Product_CurrentStock_NonNegative", "[CurrentStock] >= 0");
+                t.HasCheckConstraint("CK_Product_UnitPrice_NonNegative", "[UnitPrice]   >= 0");
+            });
 
             // Chave primaria
             builder.HasKey(p => p.Id);

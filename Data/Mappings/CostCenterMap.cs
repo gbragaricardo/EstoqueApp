@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EstoqueApp.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EstoqueApp.Data.Mappings
@@ -30,6 +31,11 @@ namespace EstoqueApp.Data.Mappings
                 .HasColumnName("Code")
                 .HasColumnType("NVARCHAR")
                 .HasMaxLength(8);
+
+            //Índices
+
+            builder.HasIndex(c => c.Code)
+                .IsUnique();
 
             //Relacionamentos
 

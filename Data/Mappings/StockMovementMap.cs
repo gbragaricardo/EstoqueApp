@@ -9,7 +9,12 @@ namespace EstoqueApp.Data.Mappings
         public void Configure(EntityTypeBuilder<StockMovement> builder)
         {
             // Tabela do banco
-            builder.ToTable("StockMovement");
+            builder.ToTable("StockMovements", t =>
+            {
+                t.HasCheckConstraint("CK_StockMovement_Quantity_Positive", "[Quantity] > 0");
+                t.HasCheckConstraint("CK_StockMovement_UnitCost_NonNegative", "[UnitCost] >= 0");
+                t.HasCheckConstraint("CK_StockMovement_Type_Allowed", "[Type] IN ('In','Out')");
+            });
 
             // Chave primaria
             builder.HasKey(m => m.Id);
@@ -31,7 +36,7 @@ namespace EstoqueApp.Data.Mappings
 
             builder.Property(m => m.UnitCost)
                 .IsRequired()
-                .HasColumnName("UnitPrice")
+                .HasColumnName("UnitCost")
                 .HasColumnType("decimal(18,2)")
                 .HasDefaultValue(0m);
 
@@ -43,15 +48,13 @@ namespace EstoqueApp.Data.Mappings
             builder.Property(m => m.CreateDate)
                 .IsRequired()
                 .HasColumnName("CreateDate")
-                .HasColumnType("smalldatetime")
-                .HasDefaultValueSql("GETDATE()");
+                .HasColumnType("datetime2")
+                .HasDefaultValueSql("GETUTCDATE()");
 
             builder.Property(m => m.Notes)
                .HasColumnName("Description")
                .HasColumnType("NVARCHAR")
                .HasMaxLength(256);
-
-
 
             //Indices
 

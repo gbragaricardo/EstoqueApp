@@ -9,12 +9,12 @@
         // Enum para facilitar a seleção do tipo In/Out
         public required MovementType Type { get; set; }
 
-        public decimal? UnitCost { get; set; }   // decimal(18,2)
+        public required decimal UnitCost { get; set; }   // decimal(18,2)
 
         public required int Quantity { get; set; }
 
         //Criado no momento em que é instanciado
-        public DateTime CreateDate { get; set; } = DateTime.Now;
+        public DateTime CreateDate { get; set; } = DateTime.UtcNow;
 
         //Nulable para que seja opcional
         public string? Notes { get; set; }

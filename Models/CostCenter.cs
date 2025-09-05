@@ -1,12 +1,14 @@
-﻿using EstoqueApp.Models;
-
-public class CostCenter
+﻿namespace EstoqueApp.Models
 {
-    public int Id { get; set; }
-    public required string Name { get; set; }
+    public class CostCenter
+    {
+        public int Id { get; set; }
+        public required string Name { get; set; }
 
-    // Se quiser, código único para relatórios/ERP
-    public string? Code { get; set; }
+        // Se quiser, código único para relatórios/ERP
+        public required string Code { get; set; }
 
-    public List<StockMovement> Movements { get; set; } = new();
+        public List<StockMovement> Movements { get; set; } = new();
+    }
+
 }
