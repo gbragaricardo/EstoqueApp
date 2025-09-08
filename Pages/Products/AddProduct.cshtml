@@ -1,0 +1,53 @@
+﻿@page
+@model EstoqueApp.Pages.Products.AddProductModel
+@{
+
+}
+
+<h1>Novo Produto</h1>
+
+<form method="post" class="mt-4">
+
+    <div class="mb-3">
+        <label asp-for="Product.Name" class="form-label"></label>
+        <input asp-for="Product.Name" class="form-control" />
+        <span asp-validation-for="Product.Name" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Product.Sku" class="form-label"></label>
+        <input asp-for="Product.Sku" class="form-control" />
+        <span asp-validation-for="Product.Sku" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Product.UnitPrice" class="form-label"></label>
+        <input asp-for="Product.UnitPrice" class="form-control" type="number" step="0.01" />
+        <span asp-validation-for="Product.UnitPrice" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Product.CurrentStock" class="form-label"></label>
+        <input asp-for="Product.CurrentStock" class="form-control" type="number" />
+        <span asp-validation-for="Product.CurrentStock" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Product.CategoryId" class="form-label"></label>
+        <select asp-for="Product.CategoryId" asp-items="Model.Categories" class="form-select"></select>
+        <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
+    </div>
+
+    <div class="form-check mb-3">
+        <input asp-for="Product.IsActive" class="form-check-input" />
+        <label asp-for="Product.IsActive" class="form-check-label"></label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Salvar</button>
+    <a asp-page="Index" class="btn btn-secondary">Cancelar</a>
+
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

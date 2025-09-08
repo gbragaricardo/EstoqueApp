@@ -1,0 +1,38 @@
+﻿@page
+@model EstoqueApp.Pages.Products.IndexModel
+
+<section>
+
+    <h1>Produtos</h1>
+
+    <a class="btn btn-primary mb-3" asp-page="AddProduct">Novo Produto</a>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>SKU</th>
+                <th>Estoque</th>
+                <th>Preço</th>
+                <th>Categoria</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in Model.Products)
+            {
+                <tr>
+                    <td>@p.Name</td>
+                    <td>@p.Sku</td>
+                    <td>@p.CurrentStock</td>
+                    <td>@p.UnitPrice.ToString("C")</td>
+                    <td>@p.Category?.Name</td>
+                    <td>
+                        <a class="btn btn-sm btn-warning" asp-page="EditProduct" asp-route-id="@p.Id">Editar</a>
+                        <a class="btn btn-sm btn-danger" asp-page="Delete" asp-route-id="@p.Id">Excluir</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</section>
