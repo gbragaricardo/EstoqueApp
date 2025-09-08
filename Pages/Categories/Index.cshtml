@@ -1,0 +1,32 @@
+﻿@page
+@model EstoqueApp.Pages.Categories.IndexModel
+@{
+}
+
+
+<section>
+
+    <h1>Categorias</h1>
+
+    <a class="btn btn-primary mb-3" asp-page="AddCategory">Nova Categoria</a>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nome</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in Model.Categories)
+            {
+                <tr>
+                    <td>@p.Name</td>
+                    <td>
+                        <a class="btn btn-sm btn-warning" asp-page="Edit" asp-route-id="@p.Id">Editar</a>
+                        <a class="btn btn-sm btn-danger" asp-page="Delete" asp-route-id="@p.Id">Excluir</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</section>
