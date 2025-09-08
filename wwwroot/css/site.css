@@ -18,7 +18,33 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    height: 100vh;
+    display: grid;
+    grid-template-areas:
+        'header header header'
+        'sidebar main main'
+        'footer footer footer';
+
+    grid-template-rows: auto 1fr auto;
+    grid-template-columns: auto 1fr 1fr;
+}
+
+header {
+    grid-area: header;
+}
+
+aside {
+    grid-area: sidebar;
+}
+
+main {
+    grid-area: main;
+    padding: 1rem;
+}
+
+footer {
+    grid-area: footer;
+
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
