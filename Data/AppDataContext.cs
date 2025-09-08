@@ -4,19 +4,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EstoqueApp.Data
 {
-    public class AppDataContext :DbContext
+    public class AppDataContext : DbContext
     {
+        public AppDataContext(DbContextOptions<AppDataContext> options) : base(options)
+        {
+
+        }
 
         public DbSet<Product> Products { get; set; }
         public DbSet<StockMovement> StockMovements { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<CostCenter> CostCenters { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer("Server=localhost,1433;Database=Estoque;User ID=sa;Password=Projeta24862;Encrypt=True;TrustServerCertificate=True");
-            //optionsBuilder.LogTo(Console.WriteLine);
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
