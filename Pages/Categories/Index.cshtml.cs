@@ -17,6 +17,7 @@ namespace EstoqueApp.Pages.Categories
         public async Task OnGetAsync()
         {
             Categories = await _context.Categories
+                .AsNoTracking()
                 .ToListAsync();
         }
     }

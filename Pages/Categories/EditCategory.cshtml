@@ -1,13 +1,14 @@
 ﻿@page
-@model EstoqueApp.Pages.Categories.AddCategoryModel
+@model EstoqueApp.Pages.Categories.EditCategoryModel
 @{
 }
 
 <section>
-
     <h1>Nova Categoria de Produto</h1>
 
     <form method="post" class="mt-4">
+
+        <input type="hidden" asp-for="Category.Id" />
 
         <div class="mb-3">
             <label asp-for="Category.Name" class="form-label"></label>
@@ -19,10 +20,4 @@
         <a asp-page="Index" class="btn btn-secondary">Cancelar</a>
 
     </form>
-
 </section>
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
-
