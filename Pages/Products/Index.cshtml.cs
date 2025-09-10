@@ -18,6 +18,7 @@ namespace EstoqueApp.Pages.Products
         {
             Products = await _context.Products
                 .Include(p => p.Category)
+                .AsNoTracking()
                 .ToListAsync();
         }
     }
