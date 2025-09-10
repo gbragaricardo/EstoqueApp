@@ -1,0 +1,34 @@
+﻿@page
+@model EstoqueApp.Pages.CostCenters.IndexModel
+@{
+}
+
+<section>
+
+    <h1>Centros de custo</h1>
+
+    <a class="btn btn-primary mb-3" asp-page="AddCostCenter">Novo centro de custo</a>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Código</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var c in Model.CostCenters)
+            {
+                <tr>
+                    <td>@c.Name</td>
+                    <td>@c.Code</td>
+                    <td>
+                        <a class="btn btn-sm btn-warning" asp-page="Edit" asp-route-id="@c.Id">Editar</a>
+                        <a class="btn btn-sm btn-danger" asp-page="Delete" asp-route-id="@c.Id">Excluir</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</section>
