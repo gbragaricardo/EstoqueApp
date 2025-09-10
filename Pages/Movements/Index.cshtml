@@ -1,0 +1,40 @@
+﻿@page
+@model EstoqueApp.Pages.Movements.IndexModel
+@{
+}
+
+<section>
+
+    <h1>Movimentações</h1>
+
+    <a class="btn btn-primary mb-3" asp-page="AddMovement">Nova</a>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Tipo</th>
+                <th>Centro de custo</th>
+                <th>Produto</th>
+                <th>Preço</th>
+                <th>Quantidade</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var m in Model.Movements)
+            {
+                <tr>
+                    <td>@m.Type.GetDisplayName()</td>
+                    <td>@m.CostCenter?.Name</td>
+                    <td>@m.Product?.Name</td>
+                    <td>@m.UnitCost.ToString("C")</td>
+                    <td>@m.Quantity</td>
+                    <td>
+                        <a class="btn btn-sm btn-warning" asp-page="EditMovement" asp-route-id="@m.Id">Editar</a>
+                        <a class="btn btn-sm btn-danger" asp-page="Delete" asp-route-id="@m.Id">Excluir</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</section>

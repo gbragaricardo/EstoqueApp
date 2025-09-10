@@ -1,4 +1,7 @@
-﻿namespace EstoqueApp.Models
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+
+namespace EstoqueApp.Models
 {
     public class StockMovement
     {
@@ -31,7 +34,9 @@
     // Enum para facilitar a seleção do tipo In/Out
     public enum MovementType
     {
+        [Display(Name = "Entrada")]
         In = 1,
+        [Display(Name = "Saída")]
         Out = 2
     }
 }
