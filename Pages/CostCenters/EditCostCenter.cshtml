@@ -1,0 +1,29 @@
+﻿@page
+@model EstoqueApp.Pages.CostCenters.EditCostCenterModel
+@{
+}
+
+<section>
+    <h1>Editar centro de custo</h1>
+
+    <form method="post" class="mt-4">
+
+        <input type="hidden" asp-for="CostCenter.Id" />
+
+        <div class="mb-3">
+            <label asp-for="CostCenter.Name" class="form-label"></label>
+            <input asp-for="CostCenter.Name" class="form-control" />
+            <span asp-validation-for="CostCenter.Name" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="CostCenter.Code" class="form-label"></label>
+            <input asp-for="CostCenter.Code" class="form-control" />
+            <span asp-validation-for="CostCenter.Code" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <a asp-page="Index" class="btn btn-secondary">Cancelar</a>
+
+    </form>
+</section>
