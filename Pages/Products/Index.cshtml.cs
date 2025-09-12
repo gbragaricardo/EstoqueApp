@@ -29,7 +29,7 @@ namespace EstoqueApp.Pages.Products
         //[BindProperty(SupportsGet = true)]
         //public int? MinStock { get; set; }
 
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(int skip = 5, int take = 5)
         {
             // Base da busca
             var query = _context.Products
@@ -55,7 +55,10 @@ namespace EstoqueApp.Pages.Products
             //    query = query.Where(p => p.CurrentStock >= MinStock.Value);
             //}
 
-            Products = await query.ToListAsync();
+            Products = await query
+                .Skip(skip)
+                .Take(take)
+                .ToListAsync();
 
             // Preenche lista de categorias para o filtro
             Categories = new SelectList(await _context.Categories.ToListAsync(), "Id", "Name");
