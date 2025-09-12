@@ -1,10 +1,21 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    Layout = "~/Pages/Shared/_LayoutNovo.cshtml";
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="grid grid-cols-3 gap-4">
+    <div class="bg-white rounded-xl shadow p-4">
+        <h5 class="text-sm text-gray-500">Total de Produtos</h5>
+        <p class="text-2xl font-bold text-gray-900">1.247</p>
+    </div>
+    <div class="bg-white rounded-xl shadow p-4">
+        <h5 class="text-sm text-gray-500">Movimentações</h5>
+        <p class="text-2xl font-bold text-gray-900">3.872</p>
+    </div>
+    <div class="bg-white rounded-xl shadow p-4">
+        <h5 class="text-sm text-gray-500">Baixo Estoque</h5>
+        <p class="text-2xl font-bold text-red-600">24</p>
+    </div>
 </div>
