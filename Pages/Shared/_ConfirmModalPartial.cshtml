@@ -1,4 +1,6 @@
-﻿<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+﻿@* BOOTSTRAP *@
+
+@* <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
 
@@ -19,6 +21,42 @@
                 </form>
             </div>
 
+        </div>
+    </div>
+</div> *@
+
+
+<!-- Botão para abrir o modal -->
+@* <button onclick="openModal()" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">
+    Abrir Modal
+</button> *@
+
+<!-- Modal (inicialmente escondido) -->
+<div id="confirmModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-50">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-md">
+
+        <!-- Header -->
+        <div class="flex justify-between items-center border-b px-4 py-2">
+            <h5 class="text-lg font-semibold text-gray-800">Confirmar ação</h5>
+            <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700">&times;</button>
+        </div>
+
+        <!-- Body -->
+        <div class="p-4">
+            <p id="confirmModalMessage" class="text-gray-600">Tem certeza que deseja continuar?</p>
+        </div>
+
+        <!-- Footer -->
+        <div class="flex justify-end gap-2 border-t px-4 py-2">
+            <form method="post" id="confirmModalForm" class="flex gap-2">
+                <input type="hidden" id="confirmModalId" name="id" />
+                <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">
+                    Confirmar
+                </button>
+                <button type="button" onclick="closeModal()" class="bg-gray-300 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-400">
+                    Cancelar
+                </button>
+            </form>
         </div>
     </div>
 </div>
