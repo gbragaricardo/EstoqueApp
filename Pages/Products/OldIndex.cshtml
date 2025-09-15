@@ -1,0 +1,112 @@
+﻿@page
+@model EstoqueApp.Pages.Products.OldIndexModel
+
+<section>
+
+    <h1 class="mb-4">
+        <a asp-page="/Products/Index" class="text-decoration-none text-dark">Produtos</a>
+    </h1>
+
+    <div class="d-flex justify-content-between mb-3">
+        <div class="d-flex gap-2">
+
+            <div>
+                <a class="btn btn-primary" asp-page="AddProduct">Novo Produto</a>
+            </div>
+
+            <form method="get">
+                <div class="d-flex justify-content-between mb-3 gap-2">
+                    <div class="d-flex">
+                        <input type="text" class="form-control"
+                               name="SearchTerm"
+                               value="@Model.SearchTerm"
+                               placeholder="Buscar por nome ou SKU"
+                               style="width: 250px;" />
+                    </div>
+
+                    <button type="button"
+                            class="btn btn-outline-secondary"
+                            data-bs-toggle="modal"
+                            data-bs-target="#filterModal">
+                        <i class="bi bi-funnel"></i> Filtros
+                    </button>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Buscar</button>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="filterModal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Filtros avançados</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label>Categoria</label>
+                                    <select class="form-select" name="CategoryId" asp-items="Model.Categories">
+                                        <option value="">Todas</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label>Status</label>
+                                    <select class="form-select" name="IsActive">
+                                        <option value="">Todos</option>
+                                        <option value="true" selected="@(Model.IsActive == true)">Ativo</option>
+                                        <option value="false" selected="@(Model.IsActive == false)">Inativo</option>
+                                    </select>
+                                </div>
+                                @* <div class="mb-3">
+                                    <label>Estoque mínimo</label>
+                                    <input type="number" class="form-control" name="MinStock" value="@Model.MinStock" />
+                                </div> *@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>SKU</th>
+                <th>Estoque</th>
+                <th>Preço</th>
+                <th>Categoria</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in Model.Products)
+            {
+                <tr>
+                    <td>@p.Name</td>
+                    <td>@p.Sku</td>
+                    <td>@p.CurrentStock</td>
+                    <td>@p.UnitPrice.ToString("C")</td>
+                    <td>@p.Category?.Name</td>
+                    <td>
+                        <a class="btn btn-sm btn-warning" asp-page="EditProduct" asp-route-id="@p.Id">Editar</a>
+                        <button type="button"
+                                class="btn btn-sm btn-danger"
+                                data-bs-toggle="modal"
+                                data-bs-target="#confirmModal"
+                                data-id="@p.Id"
+                                data-handler="Delete"
+                                data_message="Deseja realmente excluir o produto @p.Name ?">
+                            Excluir
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <partial name="./Shared/_ConfirmModalPartial"/>
+</section>
