@@ -1,105 +1,144 @@
 ﻿@page
 @model EstoqueApp.Pages.Products.IndexModel
+@{
+	Layout = "_LayoutNovo";
+}
 
-<section>
 
-    <h1 class="mb-4">
-        <a asp-page="/Products/Index" class="text-decoration-none text-dark">Produtos</a>
-    </h1>
-
-    <div class="d-flex justify-content-between mb-3">
-        <div class="d-flex gap-2">
-
-            <div>
-                <a class="btn btn-primary" asp-page="AddProduct">Novo Produto</a>
-            </div>
-
-            <form method="get">
-                <div class="d-flex justify-content-between mb-3 gap-2">
-                    <div class="d-flex">
-                        <input type="text" class="form-control"
-                               name="SearchTerm"
-                               value="@Model.SearchTerm"
-                               placeholder="Buscar por nome ou SKU"
-                               style="width: 250px;" />
-                    </div>
-
-                    <button type="button"
-                            class="btn btn-outline-secondary"
-                            data-bs-toggle="modal"
-                            data-bs-target="#filterModal">
-                        <i class="bi bi-funnel"></i> Filtros
-                    </button>
-
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Buscar</button>
-                    </div>
-                </div>
-
-                <div class="modal fade" id="filterModal" tabindex="-1">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Filtros avançados</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="mb-3">
-                                    <label>Categoria</label>
-                                    <select class="form-select" name="CategoryId" asp-items="Model.Categories">
-                                        <option value="">Todas</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label>Status</label>
-                                    <select class="form-select" name="IsActive">
-                                        <option value="">Todos</option>
-                                        <option value="true" selected="@(Model.IsActive == true)">Ativo</option>
-                                        <option value="false" selected="@(Model.IsActive == false)">Inativo</option>
-                                    </select>
-                                </div>
-                                @* <div class="mb-3">
-                                    <label>Estoque mínimo</label>
-                                    <input type="number" class="form-control" name="MinStock" value="@Model.MinStock" />
-                                </div> *@
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
+<!-- Header da página -->
+  <div class="flex items-center justify-between mb-6">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-800">Produtos</h1>
+      <p class="text-gray-500">Gerencie seu catálogo de produtos</p>
     </div>
-    
+    <button class="flex items-center gap-2 bg-[#16559F] text-white px-4 py-2 rounded-md hover:bg-teal-800">
+      + Novo Produto
+    </button>
+  </div>
 
-    <table class="table table-striped">
-        <thead>
+  <!-- Barra de busca e filtros -->
+    <form method="get">
+        <div class="bg-gray-50 px-4 py-8 rounded-lg mb-6 flex items-center justify-between">
+            <div class="flex items-center gap-3 w-2/3">
+              <!-- Input de busca -->
+                <div class="flex items-center bg-white border border-gray-300 rounded-md px-3 py-2 w-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z" />
+                    </svg>
+                    <input class="w-full outline-none"
+                           name="SearchTerm" type="text"
+                           value="@Model.SearchTerm"
+                           placeholder="Buscar por nome ou SKU"/>
+                </div>
+
+            <!-- Dropdown de filtros -->
+            <div class="relative">
+                <button id="dropdownButton" type="button"
+                        class="flex items-center gap-2 border border-gray-300 bg-white px-3 py-2 rounded-md hover:bg-gray-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="0.5" stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z" />
+                    </svg>
+                    Filtros
+                    <svg class="w-3 h-3 ml-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="m1 1 4 4 4-4" />
+                    </svg>
+                </button>
+
+                <!-- Conteúdo do dropdown -->
+                <div id="dropdownMenu" class="hidden absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                    <div class="p-3 space-y-3">
+                        <!-- Categoria -->
+                        <label class="block text-sm font-medium text-gray-700">Categoria</label>
+                        <select name="CategoryId" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                            <option value="">Todas</option>
+                            @foreach (var c in Model.Categories)
+                            {
+                                <option value="@c.Value" selected="@(Model.CategoryId == int.Parse(c.Value) ? "selected" : null)">
+                                    @c.Text
+                                </option>
+                            }
+                        </select>
+
+                        <!-- Status -->
+                        <label class="block text-sm font-medium text-gray-700">Status</label>
+                        <select name="IsActive" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                            <option value="">Todos</option>
+                            <option value="true" selected="@(Model.IsActive == true ? "selected" : null)">Ativos</option>
+                            <option value="false" selected="@(Model.IsActive == false ? "selected" : null)">Inativos</option>
+                        </select>
+
+                        <!-- Botão aplicar -->
+                        <button type="submit"
+                                class="w-full mt-2 bg-gray-900 text-white px-3 py-2 rounded-md hover:bg-gray-800">
+                            Aplicar filtros
+                        </button>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </form>
+    @* <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
+        Dropdown button <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
+        </svg>
+    </button>
+
+    <!-- Dropdown menu -->
+    <div id="dropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700">
+        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+            <li>
+                <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
+            </li>
+            <li>
+                <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
+            </li>
+            <li>
+                <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Earnings</a>
+            </li>
+            <li>
+                <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sign out</a>
+            </li>
+        </ul>
+    </div> *@
+
+  
+
+  <!-- Lista de produtos -->
+  <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <table class="w-full text-sm text-left text-gray-500">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
             <tr>
-                <th>Nome</th>
-                <th>SKU</th>
-                <th>Estoque</th>
-                <th>Preço</th>
-                <th>Categoria</th>
-                <th>Ações</th>
+                <th scope="col" class="px-6 py-3">Produto</th>
+                <th scope="col" class="px-6 py-3">SKU</th>
+                <th scope="col" class="px-6 py-3">Categoria</th>
+                <th scope="col" class="px-6 py-3">Estoque</th>
+                <th scope="col" class="px-6 py-3">Preço</th>
+                <th scope="col" class="px-6 py-3">Status</th>
+                <th scope="col" class="px-6 py-3">Ações</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var p in Model.Products)
             {
-                <tr>
-                    <td>@p.Name</td>
-                    <td>@p.Sku</td>
-                    <td>@p.CurrentStock</td>
-                    <td>@p.UnitPrice.ToString("C")</td>
-                    <td>@p.Category?.Name</td>
-                    <td>
-                        <a class="btn btn-sm btn-warning" asp-page="EditProduct" asp-route-id="@p.Id">Editar</a>
+                <tr class="odd:bg-white even:bg-gray-50 border-b hover:bg-gray-100">
+                    <td class="px-6 py-4 font-medium text-gray-900">@p.Name</td>
+                    <td class="px-6 py-4">@p.Sku</td>
+                    <td class="px-6 py-4">@p.Category?.Name</td>
+                    <td class="px-6 py-4">@p.CurrentStock</td>
+                    <td class="px-6 py-4">@p.UnitPrice.ToString("C")</td>
+                    <td class="px-6 py-4">@p.IsActive</td>
+                    <td class="px-6 py-4 flex gap-2">
+
+                        <a class="bg-[#009587] text-white p-2 rounded-lg hover:bg-gray-600" asp-page="EditProduct" asp-route-id="@p.Id">Editar</a>
+
                         <button type="button"
-                                class="btn btn-sm btn-danger"
-                                data-bs-toggle="modal"
-                                data-bs-target="#confirmModal"
+                                onclick="openModal(this)"
+                                class="bg-[#DB0F19] text-white p-2 rounded-lg hover:bg-gray-600"
                                 data-id="@p.Id"
                                 data-handler="Delete"
-                                data_message="Deseja realmente excluir o produto @p.Name ?">
+                                data-message="Deseja realmente excluir o produto @p.Name ?">
                             Excluir
                         </button>
                     </td>
@@ -107,6 +146,58 @@
             }
         </tbody>
     </table>
+</div>
 
-    <partial name="./Shared/_ConfirmModalPartial"/>
-</section>
+<!-- Paginação -->
+<div class="flex justify-center items-center gap-4 mt-4">
+    <!-- Botão anterior -->
+    @if (Request.Query.ContainsKey("skip") && int.Parse(Request.Query["skip"]) > 0)
+    {
+        var previousSkip = Math.Max(0, int.Parse(Request.Query["skip"]) - 8);
+        <a asp-page="./Index"
+           asp-route-skip="@previousSkip"
+           asp-route-take="8"
+           asp-route-SearchTerm="@Model.SearchTerm"
+           asp-route-CategoryId="@Model.CategoryId"
+           asp-route-IsActive="@Model.IsActive"
+           class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 text-gray-700">
+            ← Anterior
+        </a>
+    }
+    else
+    {
+        <span class="px-4 py-2 bg-gray-100 text-gray-400 rounded">← Anterior</span>
+    }
+
+    <!-- Botão próximo -->
+    @if (Model.Products.Count == 8)
+    {
+        var nextSkip = Request.Query.ContainsKey("skip") ? int.Parse(Request.Query["skip"]) + 8 : 8;
+        <a asp-page="./Index"
+           asp-route-skip="@nextSkip"
+           asp-route-take="8"
+           asp-route-SearchTerm="@Model.SearchTerm"
+           asp-route-CategoryId="@Model.CategoryId"
+           asp-route-IsActive="@Model.IsActive"
+           class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 text-gray-700">
+            Próximo →
+        </a>
+    }
+    else
+    {
+        <span class="px-4 py-2 bg-gray-100 text-gray-400 rounded">Próximo →</span>
+    }
+</div>
+
+<partial name="./Shared/_ConfirmModalPartial" />
+
+@section Scripts {
+    <script>
+        // Toggle dropdown manualmente (sem Flowbite, só JS simples)
+        document.getElementById("dropdownButton").addEventListener("click", function () {
+            document.getElementById("dropdownMenu").classList.toggle("hidden");
+        });
+    </script>
+}
+
+

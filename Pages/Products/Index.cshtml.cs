@@ -1,7 +1,9 @@
-using EstoqueApp.Data;
-using EstoqueApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using EstoqueApp.Data;
+
+
+using EstoqueApp.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,7 +18,6 @@ namespace EstoqueApp.Pages.Products
         public IList<Product> Products { get; set; } = [];
         public SelectList Categories { get; set; } = null!;
 
-
         [BindProperty(SupportsGet = true)]
         public string? SearchTerm { get; set; }
 
@@ -29,17 +30,18 @@ namespace EstoqueApp.Pages.Products
         //[BindProperty(SupportsGet = true)]
         //public int? MinStock { get; set; }
 
-        public async Task OnGetAsync(int skip = 5, int take = 5)
+        public async Task OnGetAsync(int skip = 0, int take = 8)
         {
+
             // Base da busca
             var query = _context.Products
-                .Include(p => p.Category)
-                .AsQueryable();
+            .Include(p => p.Category)
+            .AsQueryable();
 
             //Filtro: TextBox
             if (string.IsNullOrEmpty(SearchTerm) == false)
                 query = query.Where(p => p.Name.Contains(SearchTerm));
-            
+
 
             // Filtro: categoria
             if (CategoryId.HasValue)
@@ -49,15 +51,15 @@ namespace EstoqueApp.Pages.Products
             if (IsActive.HasValue)
                 query = query.Where(p => p.IsActive == IsActive.Value);
 
-            //// Filtro: estoque mínimo
+            //// Filtro: estoque mï¿½nimo
             //if (MinStock.HasValue)
             //{
             //    query = query.Where(p => p.CurrentStock >= MinStock.Value);
             //}
 
             Products = await query
-                .Skip(skip)
-                .Take(take)
+                 .Skip(skip)
+                 .Take(take)
                 .ToListAsync();
 
             // Preenche lista de categorias para o filtro
