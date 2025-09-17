@@ -9,16 +9,16 @@
   <div class="flex items-center justify-between mb-6">
     <div>
       <h1 class="text-3xl font-bold text-gray-800">Produtos</h1>
-      <p class="text-gray-500">Gerencie seu catálogo de produtos</p>
+      <p class="text-gray-500">Gerencie o catálogo de produtos</p>
     </div>
-    <button class="flex items-center gap-2 bg-[#16559F] text-white px-4 py-2 rounded-md hover:bg-teal-800">
+    <button class="flex items-center gap-2 bg-[#16559F] text-white px-4 py-2 rounded-md hover:bg-gray-300">
       + Novo Produto
     </button>
   </div>
 
   <!-- Barra de busca e filtros -->
     <form method="get">
-        <div class="bg-gray-50 px-4 py-8 rounded-lg mb-6 flex items-center justify-between">
+        <div class="bg-white px-4 py-8 rounded-lg mb-6 flex items-center justify-between">
             <div class="flex items-center gap-3 w-2/3">
               <!-- Input de busca -->
                 <div class="flex items-center bg-white border border-gray-300 rounded-md px-3 py-2 w-full">
@@ -70,7 +70,7 @@
 
                         <!-- Botão aplicar -->
                         <button type="submit"
-                                class="w-full mt-2 bg-gray-900 text-white px-3 py-2 rounded-md hover:bg-gray-800">
+                                class="w-full mt-2 bg-[#16559F] text-white px-3 py-2 rounded-md hover:bg-gray-300">
                             Aplicar filtros
                         </button>
                     </div>
@@ -113,6 +113,7 @@
                 <th scope="col" class="px-6 py-3">Produto</th>
                 <th scope="col" class="px-6 py-3">SKU</th>
                 <th scope="col" class="px-6 py-3">Categoria</th>
+                <th scope="col" class="px-6 py-3">Estoque Min</th>
                 <th scope="col" class="px-6 py-3">Estoque</th>
                 <th scope="col" class="px-6 py-3">Preço</th>
                 <th scope="col" class="px-6 py-3">Status</th>
@@ -122,10 +123,11 @@
         <tbody>
             @foreach (var p in Model.Products)
             {
-                <tr class="odd:bg-white even:bg-gray-50 border-b hover:bg-gray-100">
+                <tr class="odd:bg-white even:bg-gray-50 border-b hover:bg-gray-300">
                     <td class="px-6 py-4 font-medium text-gray-900">@p.Name</td>
                     <td class="px-6 py-4">@p.Sku</td>
                     <td class="px-6 py-4">@p.Category?.Name</td>
+                    <td class="px-6 py-4">@p.MinStock</td>
                     <td class="px-6 py-4">@p.CurrentStock</td>
                     <td class="px-6 py-4">@p.UnitPrice.ToString("C")</td>
                     <td class="px-6 py-4">@p.IsActive</td>
@@ -160,7 +162,7 @@
            asp-route-SearchTerm="@Model.SearchTerm"
            asp-route-CategoryId="@Model.CategoryId"
            asp-route-IsActive="@Model.IsActive"
-           class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 text-gray-700">
+           class="px-4 py-2 bg-gray-200 rounded hover:bg-[#16559F] hover:text-white text-gray-700">
             ← Anterior
         </a>
     }
@@ -179,7 +181,7 @@
            asp-route-SearchTerm="@Model.SearchTerm"
            asp-route-CategoryId="@Model.CategoryId"
            asp-route-IsActive="@Model.IsActive"
-           class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 text-gray-700">
+           class="px-4 py-2 bg-gray-200 rounded hover:bg-[#16559F] hover:text-white text-gray-700">
             Próximo →
         </a>
     }
