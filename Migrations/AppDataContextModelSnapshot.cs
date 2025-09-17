@@ -80,10 +80,10 @@ namespace EstoqueApp.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
-                    b.Property<int>("CurrentStock")
+                    b.Property<decimal>("CurrentStock")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0)
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(0m)
                         .HasColumnName("CurrentStock");
 
                     b.Property<string>("Description")
@@ -97,9 +97,15 @@ namespace EstoqueApp.Migrations
                         .HasDefaultValue(true)
                         .HasColumnName("IsActive");
 
+                    b.Property<decimal>("MinStock")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(0m)
+                        .HasColumnName("MinStock");
+
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(80)
+                        .HasMaxLength(160)
                         .HasColumnType("NVARCHAR")
                         .HasColumnName("Name");
 
@@ -108,6 +114,9 @@ namespace EstoqueApp.Migrations
                         .HasMaxLength(8)
                         .HasColumnType("NVARCHAR")
                         .HasColumnName("SKU");
+
+                    b.Property<int>("UnitOfMeasureId")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("UnitPrice")
                         .ValueGeneratedOnAdd()
@@ -119,6 +128,11 @@ namespace EstoqueApp.Migrations
 
                     b.HasIndex("CategoryId");
 
+                    b.HasIndex("UnitOfMeasureId");
+
+                    b.HasIndex(new[] { "Name" }, "IX_ProductName")
+                        .IsUnique();
+
                     b.HasIndex(new[] { "Sku" }, "IX_Product_Sku")
                         .IsUnique();
 
@@ -128,6 +142,40 @@ namespace EstoqueApp.Migrations
 
                             t.HasCheckConstraint("CK_Product_UnitPrice_NonNegative", "[UnitPrice]   >= 0");
                         });
+                });
+
+            modelBuilder.Entity("EstoqueApp.Models.StockByCostCenter", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CostCenterId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("LastUpdated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasColumnName("LastUpdate")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Quantity")
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("Quantity");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CostCenterId");
+
+                    b.HasIndex("ProductId", "CostCenterId")
+                        .IsUnique();
+
+                    b.ToTable("StockByCostCenter", (string)null);
                 });
 
             modelBuilder.Entity("EstoqueApp.Models.StockMovement", b =>
@@ -141,51 +189,83 @@ namespace EstoqueApp.Migrations
                     b.Property<int?>("CostCenterId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreateDate")
+                    b.Property<DateTime>("Date")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasColumnName("CreateDate")
+                        .HasColumnName("Date")
                         .HasDefaultValueSql("GETUTCDATE()");
 
-                    b.Property<string>("Notes")
+                    b.Property<string>("Description")
                         .HasMaxLength(256)
                         .HasColumnType("NVARCHAR")
                         .HasColumnName("Description");
 
+                    b.Property<int?>("DestinationCostCenterId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("OriginCostCenterId")
+                        .HasColumnType("int");
+
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int")
+                    b.Property<decimal>("Quantity")
+                        .HasColumnType("decimal(18,2)")
                         .HasColumnName("Quantity");
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasMaxLength(10)
+                        .HasMaxLength(16)
                         .IsUnicode(false)
-                        .HasColumnType("VARCHAR")
+                        .HasColumnType("varchar(16)")
                         .HasColumnName("Type");
-
-                    b.Property<decimal>("UnitCost")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(18,2)")
-                        .HasDefaultValue(0m)
-                        .HasColumnName("UnitCost");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CostCenterId");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex(new[] { "Date" }, "IX_StockMovement_Date");
+
+                    b.HasIndex(new[] { "DestinationCostCenterId" }, "IX_StockMovement_DestinationCC");
+
+                    b.HasIndex(new[] { "OriginCostCenterId" }, "IX_StockMovement_OriginCC");
+
+                    b.HasIndex(new[] { "ProductId" }, "IX_StockMovement_Product");
 
                     b.ToTable("StockMovements", null, t =>
                         {
                             t.HasCheckConstraint("CK_StockMovement_Quantity_Positive", "[Quantity] > 0");
 
-                            t.HasCheckConstraint("CK_StockMovement_Type_Allowed", "[Type] IN ('In','Out')");
-
-                            t.HasCheckConstraint("CK_StockMovement_UnitCost_NonNegative", "[UnitCost] >= 0");
+                            t.HasCheckConstraint("CK_StockMovement_Type_Allowed", "[Type] IN ('Entry','Exit','Transfer')");
                         });
+                });
+
+            modelBuilder.Entity("EstoqueApp.Models.UnitOfMeasure", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Abbreviation")
+                        .IsRequired()
+                        .HasMaxLength(8)
+                        .HasColumnType("NVARCHAR")
+                        .HasColumnName("Abbreviation");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("NVARCHAR")
+                        .HasColumnName("Name");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex(new[] { "Abbreviation" }, "IX_UnitOfMeasure_Abbreviation")
+                        .IsUnique();
+
+                    b.ToTable("UnitOfMeasure", (string)null);
                 });
 
             modelBuilder.Entity("EstoqueApp.Models.Product", b =>
@@ -197,16 +277,56 @@ namespace EstoqueApp.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_Product_Category");
 
+                    b.HasOne("EstoqueApp.Models.UnitOfMeasure", "UnitOfMeasure")
+                        .WithMany("Products")
+                        .HasForeignKey("UnitOfMeasureId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("FK_Product_UnitOfMeasure");
+
                     b.Navigation("Category");
+
+                    b.Navigation("UnitOfMeasure");
+                });
+
+            modelBuilder.Entity("EstoqueApp.Models.StockByCostCenter", b =>
+                {
+                    b.HasOne("EstoqueApp.Models.CostCenter", "CostCenter")
+                        .WithMany("StocksByCostCenter")
+                        .HasForeignKey("CostCenterId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("FK_StockByCC_CostCenter");
+
+                    b.HasOne("EstoqueApp.Models.Product", "Product")
+                        .WithMany("StocksByCostCenter")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("FK_StockByCC_Product");
+
+                    b.Navigation("CostCenter");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("EstoqueApp.Models.StockMovement", b =>
                 {
-                    b.HasOne("EstoqueApp.Models.CostCenter", "CostCenter")
+                    b.HasOne("EstoqueApp.Models.CostCenter", null)
                         .WithMany("Movements")
-                        .HasForeignKey("CostCenterId")
+                        .HasForeignKey("CostCenterId");
+
+                    b.HasOne("EstoqueApp.Models.CostCenter", "DestinationCostCenter")
+                        .WithMany()
+                        .HasForeignKey("DestinationCostCenterId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .HasConstraintName("FK_Movement_CostCenter");
+                        .HasConstraintName("FK_Movement_DestinationCostCenter");
+
+                    b.HasOne("EstoqueApp.Models.CostCenter", "OriginCostCenter")
+                        .WithMany()
+                        .HasForeignKey("OriginCostCenterId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("FK_Movement_OriginCostCenter");
 
                     b.HasOne("EstoqueApp.Models.Product", "Product")
                         .WithMany("Movements")
@@ -215,7 +335,9 @@ namespace EstoqueApp.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_Movement_Product");
 
-                    b.Navigation("CostCenter");
+                    b.Navigation("DestinationCostCenter");
+
+                    b.Navigation("OriginCostCenter");
 
                     b.Navigation("Product");
                 });
@@ -228,11 +350,20 @@ namespace EstoqueApp.Migrations
             modelBuilder.Entity("EstoqueApp.Models.CostCenter", b =>
                 {
                     b.Navigation("Movements");
+
+                    b.Navigation("StocksByCostCenter");
                 });
 
             modelBuilder.Entity("EstoqueApp.Models.Product", b =>
                 {
                     b.Navigation("Movements");
+
+                    b.Navigation("StocksByCostCenter");
+                });
+
+            modelBuilder.Entity("EstoqueApp.Models.UnitOfMeasure", b =>
+                {
+                    b.Navigation("Products");
                 });
 #pragma warning restore 612, 618
         }
