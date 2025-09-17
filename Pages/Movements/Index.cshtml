@@ -25,9 +25,8 @@
             {
                 <tr>
                     <td>@m.Type.GetDisplayName()</td>
-                    <td>@m.CostCenter?.Name</td>
+                    <td>@m.DestinationCostCenter?.Name</td>
                     <td>@m.Product?.Name</td>
-                    <td>@m.UnitCost.ToString("C")</td>
                     <td>@m.Quantity</td>
                     <td>
                         <a class="btn btn-sm btn-warning" asp-page="EditMovement" asp-route-id="@m.Id">Editar</a>

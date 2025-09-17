@@ -19,7 +19,7 @@ namespace EstoqueApp.Pages.Movements
         {
             Movements = await _context.StockMovements
                 .Include(m => m.Product)
-                .Include(m => m.CostCenter)
+                .Include(m => m.DestinationCostCenter)
                 .AsNoTracking()
                 .ToListAsync();
         }

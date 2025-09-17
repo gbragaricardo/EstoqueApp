@@ -15,9 +15,9 @@
         </div>
 
         <div class="mb-3">
-            <label asp-for="Movement.CostCenterId" class="form-label">Centro de Custo</label>
-            <select asp-for="Movement.CostCenterId" asp-items="Model.CostCenters" class="form-select"></select>
-            <span asp-validation-for="Movement.CostCenterId" class="text-danger"></span>
+            <label asp-for="Movement.DestinationCostCenterId" class="form-label">Centro de Custo</label>
+            <select asp-for="Movement.DestinationCostCenterId" asp-items="Model.CostCenters" class="form-select"></select>
+            <span asp-validation-for="Movement.DestinationCostCenterId" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
@@ -27,21 +27,15 @@
         </div>
 
         <div class="mb-3">
-            <label asp-for="Movement.UnitCost" class="form-label">Custo Unitário</label>
-            <input asp-for="Movement.UnitCost" class="form-control" type="number" step="0.01" />
-            <span asp-validation-for="Movement.UnitCost" class="text-danger"></span>
-        </div>
-
-        <div class="mb-3">
             <label asp-for="Movement.Quantity" class="form-label">Quantidade</label>
             <input asp-for="Movement.Quantity" class="form-control" type="number" />
             <span asp-validation-for="Movement.Quantity" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label asp-for="Movement.Notes" class="form-label">Notas</label>
-            <input asp-for="Movement.Notes" class="form-control" />
-            <span asp-validation-for="Movement.Notes" class="text-danger"></span>
+            <label asp-for="Movement.Description" class="form-label">Notas</label>
+            <input asp-for="Movement.Description" class="form-control" />
+            <span asp-validation-for="Movement.Description" class="text-danger"></span>
         </div>
 
         <button type="submit" class="btn btn-primary">Salvar</button>

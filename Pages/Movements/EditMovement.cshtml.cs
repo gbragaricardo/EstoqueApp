@@ -30,7 +30,7 @@ namespace EstoqueApp.Pages.Movements
                 return NotFound();
 
             Products = new SelectList(_context.Products, "Id", "Name", Movement.ProductId);
-            CostCenters = new SelectList(_context.CostCenters, "Id", "Name", Movement.CostCenterId);
+            CostCenters = new SelectList(_context.CostCenters, "Id", "Name", Movement.DestinationCostCenterId);
             Types = EnumExtensions.ToSelectList<MovementType>();
 
             return Page();
@@ -41,7 +41,7 @@ namespace EstoqueApp.Pages.Movements
             if (!ModelState.IsValid)
             {
                 Products = new SelectList(_context.StockMovements, "Id", "Name", Movement.ProductId);
-                CostCenters = new SelectList(_context.CostCenters, "Id", "Name", Movement.CostCenterId);
+                CostCenters = new SelectList(_context.CostCenters, "Id", "Name", Movement.DestinationCostCenterId);
                 Types = EnumExtensions.ToSelectList<MovementType>();
 
                 return Page();
@@ -55,11 +55,10 @@ namespace EstoqueApp.Pages.Movements
 
             // Atualiza só os campos editáveis
             movementInDb.Type = Movement.Type;
-            movementInDb.UnitCost = Movement.UnitCost;
             movementInDb.Quantity = Movement.Quantity;
-            movementInDb.Notes = Movement.Notes;
+            movementInDb.Description = Movement.Description;
             movementInDb.ProductId = Movement.ProductId;
-            movementInDb.CostCenterId = Movement.CostCenterId;
+            movementInDb.DestinationCostCenterId = Movement.DestinationCostCenterId;
 
             await _context.SaveChangesAsync();
 
