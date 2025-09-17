@@ -29,7 +29,7 @@ namespace EstoqueApp.Data.Mappings
                 .IsRequired()
                 .HasColumnName("Name")
                 .HasColumnType("NVARCHAR")
-                .HasMaxLength(80);
+                .HasMaxLength(160);
 
             builder.Property(p => p.UnitPrice)
                 .IsRequired()
@@ -48,10 +48,16 @@ namespace EstoqueApp.Data.Mappings
                 .HasColumnType("NVARCHAR")
                 .HasMaxLength(8);
 
+            builder.Property(p => p.MinStock)
+               .IsRequired()
+               .HasColumnName("MinStock")
+               .HasColumnType("decimal(18,2)")
+               .HasDefaultValue(0);
+
             builder.Property(p => p.CurrentStock)
                 .IsRequired()
                 .HasColumnName("CurrentStock")
-                .HasColumnType("int")
+                .HasColumnType("decimal(18,2)")
                 .HasDefaultValue(0);
 
             builder.Property(p => p.IsActive)
@@ -62,6 +68,9 @@ namespace EstoqueApp.Data.Mappings
 
 
             //Indices
+            builder.HasIndex(p => p.Name, "IX_ProductName")
+                .IsUnique();
+
             builder.HasIndex(x => x.Sku, "IX_Product_Sku")
                 .IsUnique();
 
@@ -70,6 +79,12 @@ namespace EstoqueApp.Data.Mappings
                 .WithMany(c => c.Products)
                 .HasForeignKey(p => p.CategoryId)
                 .HasConstraintName("FK_Product_Category")
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(p => p.UnitOfMeasure)
+                .WithMany(un => un.Products)
+                .HasForeignKey(p => p.UnitOfMeasureId)
+                .HasConstraintName("FK_Product_UnitOfMeasure")
                 .OnDelete(DeleteBehavior.Restrict);
 
         }

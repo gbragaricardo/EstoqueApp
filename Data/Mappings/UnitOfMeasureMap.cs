@@ -9,38 +9,40 @@ namespace EstoqueApp.Data.Mappings
         public void Configure(EntityTypeBuilder<UnitOfMeasure> builder)
         {
             // Tabela do banco
-            builder.ToTable("UnitOfMeasure", t =>
-            {
-                t.HasCheckConstraint("CK_Product_CurrentStock_NonNegative", "[CurrentStock] >= 0");
-                t.HasCheckConstraint("CK_Product_UnitPrice_NonNegative", "[UnitPrice]   >= 0");
-            });
+            builder.ToTable("UnitOfMeasure");
 
             // Chave primaria
-            builder.HasKey(p => p.Id);
+            builder.HasKey(un => un.Id);
 
             //Identity
-            builder.Property(p => p.Id)
+            builder.Property(un => un.Id)
                 .ValueGeneratedOnAdd()
                 .UseIdentityColumn();
 
             // Propriedades
-            builder.Property(p => p.Name)
+            builder.Property(un => un.Name)
                 .IsRequired()
                 .HasColumnName("Name")
                 .HasColumnType("NVARCHAR")
                 .HasMaxLength(80);
 
+            builder.Property(un => un.Abbreviation)
+                .IsRequired()
+                .HasColumnName("Abbreviation")
+                .HasColumnType("NVARCHAR")
+                .HasMaxLength(8);
 
-            //Indices
-            builder.HasIndex(x => x.Sku, "IX_Product_Sku")
-                .IsUnique();
+
+
+            ////Indices
+            builder.HasIndex(u => u.Abbreviation, "IX_UnitOfMeasure_Abbreviation")
+                   .IsUnique();
+
+
 
             //Relacionamentos
-            builder.HasOne(p => p.Category)
-                .WithMany(c => c.Products)
-                .HasForeignKey(p => p.CategoryId)
-                .HasConstraintName("FK_Product_Category")
-                .OnDelete(DeleteBehavior.Restrict);
+
+            //Relacionamento tendo muito produtos no mapping de products
         }
     }
 }

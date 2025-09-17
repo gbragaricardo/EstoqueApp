@@ -22,6 +22,8 @@ namespace EstoqueApp.Data
             modelBuilder.ApplyConfiguration(new StockMovementMap());
             modelBuilder.ApplyConfiguration(new CategoryMap());
             modelBuilder.ApplyConfiguration(new CostCenterMap());
+            modelBuilder.ApplyConfiguration(new UnitOfMeasureMap());
+            modelBuilder.ApplyConfiguration(new StockByCostCenterMap());
         }
     }
 }

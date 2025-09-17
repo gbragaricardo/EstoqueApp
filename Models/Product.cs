@@ -31,9 +31,7 @@
         public int UnitOfMeasureId { get; set; }
         public UnitOfMeasure? UnitOfMeasure { get; set; }
 
-        public int CostCenterId { get; set; }
-        public CostCenter? CostCenter { get; set; }
-
+        public List<StockByCostCenter> StocksByCostCenter { get; set; } = new();
         public List<StockMovement> Movements { get; set; } = new ();
     }
 }

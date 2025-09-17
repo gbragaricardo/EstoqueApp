@@ -10,33 +10,39 @@ namespace EstoqueApp.Models
         public int Id { get; set; }
 
         // Enum para facilitar a seleção do tipo In/Out
-        public required MovementType Type { get; set; }
+        public MovementType Type { get; set; }
 
-        public required decimal UnitCost { get; set; }   // decimal(18,2)
-
-        public required int Quantity { get; set; }
+        public decimal Quantity { get; set; }
 
         //Criado no momento em que é instanciado
-        public DateTime CreateDate { get; set; } = DateTime.UtcNow;
+        public DateTime Date { get; set; } = DateTime.UtcNow;
 
         //Nulable para que seja opcional
-        public string? Notes { get; set; }
+        public string? Description { get; set; }
 
         //Produto(Id) que está sendo movimentado
         public int ProductId { get; set; }
         public Product? Product { get; set; }
 
-        // pode ser null (para entradas ou saídas sem Centro de custo)
-        public int? CostCenterId { get; set; }        
-        public CostCenter? CostCenter { get; set; }
+        // Origem da movimentação (null em Entrada)
+        public int? OriginCostCenterId { get; set; }
+        public CostCenter? OriginCostCenter { get; set; }
+
+        // Destino da movimentação (null em Saída)
+        public int? DestinationCostCenterId { get; set; }
+        public CostCenter? DestinationCostCenter { get; set; }
     }
 
     // Enum para facilitar a seleção do tipo In/Out
     public enum MovementType
     {
         [Display(Name = "Entrada")]
-        In = 1,
+        Entry = 1,
+
         [Display(Name = "Saída")]
-        Out = 2
+        Exit = 2,
+
+        [Display(Name = "Transferência")]
+        Transfer = 3,
     }
 }
