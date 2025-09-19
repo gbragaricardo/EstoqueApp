@@ -1,4 +1,4 @@
-using EstoqueApp.Data;
+﻿using EstoqueApp.Data;
 using EstoqueApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -49,7 +49,7 @@ namespace EstoqueApp.Pages.Products
             if (IsActive.HasValue)
                 query = query.Where(p => p.IsActive == IsActive.Value);
 
-            //// Filtro: estoque m�nimo
+            //// Filtro: estoque mínimo
             //if (MinStock.HasValue)
             //{
             //    query = query.Where(p => p.CurrentStock >= MinStock.Value);

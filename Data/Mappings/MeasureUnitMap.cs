@@ -4,12 +4,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EstoqueApp.Data.Mappings
 {
-    public class UnitOfMeasureMap : IEntityTypeConfiguration<UnitOfMeasure>
+    public class MeasureUnitMap : IEntityTypeConfiguration<MeasureUnit>
     {
-        public void Configure(EntityTypeBuilder<UnitOfMeasure> builder)
+        public void Configure(EntityTypeBuilder<MeasureUnit> builder)
         {
             // Tabela do banco
-            builder.ToTable("UnitOfMeasure");
+            builder.ToTable("MeasureUnit");
 
             // Chave primaria
             builder.HasKey(un => un.Id);
@@ -35,7 +35,7 @@ namespace EstoqueApp.Data.Mappings
 
 
             ////Indices
-            builder.HasIndex(u => u.Abbreviation, "IX_UnitOfMeasure_Abbreviation")
+            builder.HasIndex(u => u.Abbreviation, "IX_MeasureUnit_Abbreviation")
                    .IsUnique();
 
 

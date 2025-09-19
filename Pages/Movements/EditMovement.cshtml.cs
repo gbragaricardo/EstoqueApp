@@ -1,4 +1,4 @@
-using EstoqueApp.Data;
+Ôªøusing EstoqueApp.Data;
 using EstoqueApp.Extensions;
 using EstoqueApp.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -53,7 +53,7 @@ namespace EstoqueApp.Pages.Movements
             if (movementInDb == null)
                 return NotFound();
 
-            // Atualiza sÛ os campos edit·veis
+            // Atualiza s√≥ os campos edit√°veis
             movementInDb.Type = Movement.Type;
             movementInDb.Quantity = Movement.Quantity;
             movementInDb.Description = Movement.Description;

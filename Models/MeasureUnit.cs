@@ -1,6 +1,6 @@
 ﻿namespace EstoqueApp.Models
 {
-    public class UnitOfMeasure
+    public class MeasureUnit
     {
         public int Id { get; set; }
 

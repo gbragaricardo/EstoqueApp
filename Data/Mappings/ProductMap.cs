@@ -81,10 +81,10 @@ namespace EstoqueApp.Data.Mappings
                 .HasConstraintName("FK_Product_Category")
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne(p => p.UnitOfMeasure)
+            builder.HasOne(p => p.MeasureUnit)
                 .WithMany(un => un.Products)
-                .HasForeignKey(p => p.UnitOfMeasureId)
-                .HasConstraintName("FK_Product_UnitOfMeasure")
+                .HasForeignKey(p => p.MeasureUnitId)
+                .HasConstraintName("FK_Product_MeasureUnit")
                 .OnDelete(DeleteBehavior.Restrict);
 
         }

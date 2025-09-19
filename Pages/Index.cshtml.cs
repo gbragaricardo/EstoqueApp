@@ -1,4 +1,4 @@
-using EstoqueApp.Data;
+ï»¿using EstoqueApp.Data;
 using EstoqueApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -75,8 +75,8 @@ public class IndexModel : PageModel
             {
                 ProductName = p.Name,
                 Message = p.CurrentStock == 0
-                    ? "Produto sem estoque disponível"
-                    : $"Estoque abaixo do mínimo ({p.CurrentStock} unidades)",
+                    ? "Produto sem estoque disponÃ­vel"
+                    : $"Estoque abaixo do mÃ­nimo ({p.CurrentStock} unidades)",
                 Level = p.CurrentStock == 0 ? "high" : "medium"
             })
             .ToList();

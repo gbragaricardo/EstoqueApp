@@ -1,4 +1,4 @@
-using EstoqueApp.Data;
+Ôªøusing EstoqueApp.Data;
 using EstoqueApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -39,7 +39,7 @@ namespace EstoqueApp.Pages.Products
             if (productInDb == null)
                 return NotFound();
 
-            // Atualiza sÛ os campos edit·veis
+            // Atualiza s√≥ os campos edit√°veis
             productInDb.Name = Product.Name;
             productInDb.Sku = Product.Sku;
             productInDb.UnitPrice = Product.UnitPrice;

@@ -1,4 +1,4 @@
-using EstoqueApp.Data;
+﻿using EstoqueApp.Data;
 using EstoqueApp.Extensions;
 using EstoqueApp.Models;
 using Microsoft.AspNetCore.Mvc;

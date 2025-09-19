@@ -39,7 +39,7 @@ namespace EstoqueApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UnitOfMeasure",
+                name: "MeasureUnit",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -49,7 +49,7 @@ namespace EstoqueApp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UnitOfMeasure", x => x.Id);
+                    table.PrimaryKey("PK_MeasureUnit", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -66,7 +66,7 @@ namespace EstoqueApp.Migrations
                     CurrentStock = table.Column<decimal>(type: "decimal(18,2)", nullable: false, defaultValue: 0m),
                     IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
-                    UnitOfMeasureId = table.Column<int>(type: "int", nullable: false)
+                    MeasureUnitId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -80,9 +80,9 @@ namespace EstoqueApp.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Product_UnitOfMeasure",
-                        column: x => x.UnitOfMeasureId,
-                        principalTable: "UnitOfMeasure",
+                        name: "FK_Product_MeasureUnit",
+                        column: x => x.MeasureUnitId,
+                        principalTable: "MeasureUnit",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -93,8 +93,8 @@ namespace EstoqueApp.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductId = table.Column<int>(type: "int", nullable: false),
-                    CostCenterId = table.Column<int>(type: "int", nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: true),
+                    CostCenterId = table.Column<int>(type: "int", nullable: true),
                     Quantity = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     LastUpdate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()")
                 },
@@ -106,17 +106,17 @@ namespace EstoqueApp.Migrations
                         column: x => x.CostCenterId,
                         principalTable: "CostCenter",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_StockByCC_Product",
                         column: x => x.ProductId,
                         principalTable: "Product",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
-                name: "StockMovements",
+                name: "StockMovement",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -132,7 +132,7 @@ namespace EstoqueApp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_StockMovements", x => x.Id);
+                    table.PrimaryKey("PK_StockMovement", x => x.Id);
                     table.CheckConstraint("CK_StockMovement_Quantity_Positive", "[Quantity] > 0");
                     table.CheckConstraint("CK_StockMovement_Type_Allowed", "[Type] IN ('Entry','Exit','Transfer')");
                     table.ForeignKey(
@@ -154,7 +154,7 @@ namespace EstoqueApp.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_StockMovements_CostCenter_CostCenterId",
+                        name: "FK_StockMovement_CostCenter_CostCenterId",
                         column: x => x.CostCenterId,
                         principalTable: "CostCenter",
                         principalColumn: "Id");
@@ -167,20 +167,26 @@ namespace EstoqueApp.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_MeasureUnit_Abbreviation",
+                table: "MeasureUnit",
+                column: "Abbreviation",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Product_CategoryId",
                 table: "Product",
                 column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Product_MeasureUnitId",
+                table: "Product",
+                column: "MeasureUnitId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Product_Sku",
                 table: "Product",
                 column: "SKU",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Product_UnitOfMeasureId",
-                table: "Product",
-                column: "UnitOfMeasureId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductName",
@@ -197,38 +203,33 @@ namespace EstoqueApp.Migrations
                 name: "IX_StockByCostCenter_ProductId_CostCenterId",
                 table: "StockByCostCenter",
                 columns: new[] { "ProductId", "CostCenterId" },
-                unique: true);
+                unique: true,
+                filter: "[ProductId] IS NOT NULL AND [CostCenterId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StockMovement_CostCenterId",
+                table: "StockMovement",
+                column: "CostCenterId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StockMovement_Date",
-                table: "StockMovements",
+                table: "StockMovement",
                 column: "Date");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StockMovement_DestinationCC",
-                table: "StockMovements",
+                table: "StockMovement",
                 column: "DestinationCostCenterId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StockMovement_OriginCC",
-                table: "StockMovements",
+                table: "StockMovement",
                 column: "OriginCostCenterId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StockMovement_Product",
-                table: "StockMovements",
+                table: "StockMovement",
                 column: "ProductId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_StockMovements_CostCenterId",
-                table: "StockMovements",
-                column: "CostCenterId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UnitOfMeasure_Abbreviation",
-                table: "UnitOfMeasure",
-                column: "Abbreviation",
-                unique: true);
         }
 
         /// <inheritdoc />
@@ -238,7 +239,7 @@ namespace EstoqueApp.Migrations
                 name: "StockByCostCenter");
 
             migrationBuilder.DropTable(
-                name: "StockMovements");
+                name: "StockMovement");
 
             migrationBuilder.DropTable(
                 name: "CostCenter");
@@ -250,7 +251,7 @@ namespace EstoqueApp.Migrations
                 name: "Category");
 
             migrationBuilder.DropTable(
-                name: "UnitOfMeasure");
+                name: "MeasureUnit");
         }
     }
 }

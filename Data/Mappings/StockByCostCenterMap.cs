@@ -33,14 +33,14 @@ namespace EstoqueApp.Data.Mappings
                    .WithMany(p => p.StocksByCostCenter)
                    .HasForeignKey(x => x.ProductId)
                    .HasConstraintName("FK_StockByCC_Product")
-                   .OnDelete(DeleteBehavior.Restrict);
+                   .OnDelete(DeleteBehavior.SetNull);
 
             // Relacionamento com CostCenter
             builder.HasOne(x => x.CostCenter)
                    .WithMany(c => c.StocksByCostCenter)
                    .HasForeignKey(x => x.CostCenterId)
                    .HasConstraintName("FK_StockByCC_CostCenter")
-                   .OnDelete(DeleteBehavior.Restrict);
+                   .OnDelete(DeleteBehavior.SetNull);
 
             //Índices
             builder.HasIndex(s => new { s.ProductId, s.CostCenterId })

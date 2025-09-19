@@ -28,8 +28,8 @@
         public int CategoryId { get; set; }
         public Category? Category { get; set; }
 
-        public int UnitOfMeasureId { get; set; }
-        public UnitOfMeasure? UnitOfMeasure { get; set; }
+        public int MeasureUnitId { get; set; }
+        public MeasureUnit? MeasureUnit { get; set; }
 
         public List<StockByCostCenter> StocksByCostCenter { get; set; } = new();
         public List<StockMovement> Movements { get; set; } = new ();

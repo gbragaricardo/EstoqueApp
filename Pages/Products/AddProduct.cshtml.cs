@@ -1,4 +1,4 @@
-using EstoqueApp.Data;
+﻿using EstoqueApp.Data;
 using EstoqueApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -13,13 +13,15 @@ namespace EstoqueApp.Pages.Products
         => _context = context;
 
         [BindProperty]
-        public Product Product { get; set; } = new Product { Name = null, Sku = null};
+        public Product Product { get; set; } = new Product { Name = null, Sku = null };
 
         public SelectList Categories { get; set; } = null!;
+        public SelectList MeasureUnits { get; set; } = null!;
 
         public void OnGet()
         {
             Categories = new SelectList(_context.Categories, "Id", "Name");
+            MeasureUnits = new SelectList(_context.MeasureUnits, "Id", "Abbreviation");
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -27,6 +29,7 @@ namespace EstoqueApp.Pages.Products
             if (!ModelState.IsValid)
             {
                 Categories = new SelectList(_context.Categories, "Id", "Name");
+                MeasureUnits = new SelectList(_context.MeasureUnits, "Id", "Abbreviation");
                 return Page();
             }
 
