@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EstoqueApp.Migrations
 {
     [DbContext(typeof(AppDataContext))]
-    [Migration("20250917151301_InitialCreate")]
+    [Migration("20250919191800_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -72,6 +72,34 @@ namespace EstoqueApp.Migrations
                     b.ToTable("CostCenter", (string)null);
                 });
 
+            modelBuilder.Entity("EstoqueApp.Models.MeasureUnit", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Abbreviation")
+                        .IsRequired()
+                        .HasMaxLength(8)
+                        .HasColumnType("NVARCHAR")
+                        .HasColumnName("Abbreviation");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("NVARCHAR")
+                        .HasColumnName("Name");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex(new[] { "Abbreviation" }, "IX_MeasureUnit_Abbreviation")
+                        .IsUnique();
+
+                    b.ToTable("MeasureUnit", (string)null);
+                });
+
             modelBuilder.Entity("EstoqueApp.Models.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -100,6 +128,9 @@ namespace EstoqueApp.Migrations
                         .HasDefaultValue(true)
                         .HasColumnName("IsActive");
 
+                    b.Property<int>("MeasureUnitId")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("MinStock")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("decimal(18,2)")
@@ -118,9 +149,6 @@ namespace EstoqueApp.Migrations
                         .HasColumnType("NVARCHAR")
                         .HasColumnName("SKU");
 
-                    b.Property<int>("UnitOfMeasureId")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("UnitPrice")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("decimal(18,2)")
@@ -131,7 +159,7 @@ namespace EstoqueApp.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("UnitOfMeasureId");
+                    b.HasIndex("MeasureUnitId");
 
                     b.HasIndex(new[] { "Name" }, "IX_ProductName")
                         .IsUnique();
@@ -155,7 +183,7 @@ namespace EstoqueApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CostCenterId")
+                    b.Property<int?>("CostCenterId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("LastUpdated")
@@ -164,7 +192,7 @@ namespace EstoqueApp.Migrations
                         .HasColumnName("LastUpdate")
                         .HasDefaultValueSql("GETUTCDATE()");
 
-                    b.Property<int>("ProductId")
+                    b.Property<int?>("ProductId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Quantity")
@@ -176,7 +204,8 @@ namespace EstoqueApp.Migrations
                     b.HasIndex("CostCenterId");
 
                     b.HasIndex("ProductId", "CostCenterId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[ProductId] IS NOT NULL AND [CostCenterId] IS NOT NULL");
 
                     b.ToTable("StockByCostCenter", (string)null);
                 });
@@ -235,40 +264,12 @@ namespace EstoqueApp.Migrations
 
                     b.HasIndex(new[] { "ProductId" }, "IX_StockMovement_Product");
 
-                    b.ToTable("StockMovements", null, t =>
+                    b.ToTable("StockMovement", null, t =>
                         {
                             t.HasCheckConstraint("CK_StockMovement_Quantity_Positive", "[Quantity] > 0");
 
                             t.HasCheckConstraint("CK_StockMovement_Type_Allowed", "[Type] IN ('Entry','Exit','Transfer')");
                         });
-                });
-
-            modelBuilder.Entity("EstoqueApp.Models.UnitOfMeasure", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Abbreviation")
-                        .IsRequired()
-                        .HasMaxLength(8)
-                        .HasColumnType("NVARCHAR")
-                        .HasColumnName("Abbreviation");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(80)
-                        .HasColumnType("NVARCHAR")
-                        .HasColumnName("Name");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex(new[] { "Abbreviation" }, "IX_UnitOfMeasure_Abbreviation")
-                        .IsUnique();
-
-                    b.ToTable("UnitOfMeasure", (string)null);
                 });
 
             modelBuilder.Entity("EstoqueApp.Models.Product", b =>
@@ -280,16 +281,16 @@ namespace EstoqueApp.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_Product_Category");
 
-                    b.HasOne("EstoqueApp.Models.UnitOfMeasure", "UnitOfMeasure")
+                    b.HasOne("EstoqueApp.Models.MeasureUnit", "MeasureUnit")
                         .WithMany("Products")
-                        .HasForeignKey("UnitOfMeasureId")
+                        .HasForeignKey("MeasureUnitId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
-                        .HasConstraintName("FK_Product_UnitOfMeasure");
+                        .HasConstraintName("FK_Product_MeasureUnit");
 
                     b.Navigation("Category");
 
-                    b.Navigation("UnitOfMeasure");
+                    b.Navigation("MeasureUnit");
                 });
 
             modelBuilder.Entity("EstoqueApp.Models.StockByCostCenter", b =>
@@ -297,15 +298,13 @@ namespace EstoqueApp.Migrations
                     b.HasOne("EstoqueApp.Models.CostCenter", "CostCenter")
                         .WithMany("StocksByCostCenter")
                         .HasForeignKey("CostCenterId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
+                        .OnDelete(DeleteBehavior.SetNull)
                         .HasConstraintName("FK_StockByCC_CostCenter");
 
                     b.HasOne("EstoqueApp.Models.Product", "Product")
                         .WithMany("StocksByCostCenter")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
+                        .OnDelete(DeleteBehavior.SetNull)
                         .HasConstraintName("FK_StockByCC_Product");
 
                     b.Navigation("CostCenter");
@@ -357,16 +356,16 @@ namespace EstoqueApp.Migrations
                     b.Navigation("StocksByCostCenter");
                 });
 
+            modelBuilder.Entity("EstoqueApp.Models.MeasureUnit", b =>
+                {
+                    b.Navigation("Products");
+                });
+
             modelBuilder.Entity("EstoqueApp.Models.Product", b =>
                 {
                     b.Navigation("Movements");
 
                     b.Navigation("StocksByCostCenter");
-                });
-
-            modelBuilder.Entity("EstoqueApp.Models.UnitOfMeasure", b =>
-                {
-                    b.Navigation("Products");
                 });
 #pragma warning restore 612, 618
         }

@@ -9,7 +9,7 @@ namespace EstoqueApp.Data.Mappings
         public void Configure(EntityTypeBuilder<StockMovement> builder)
         {
             // Tabela do banco
-            builder.ToTable("StockMovements", t =>
+            builder.ToTable("StockMovement", t =>
             {
                 t.HasCheckConstraint("CK_StockMovement_Quantity_Positive", "[Quantity] > 0");
                 t.HasCheckConstraint("CK_StockMovement_Type_Allowed", "[Type] IN ('Entry','Exit','Transfer')");

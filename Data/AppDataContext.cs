@@ -1,4 +1,4 @@
-using EstoqueApp.Data.Mappings;
+﻿using EstoqueApp.Data.Mappings;
 using EstoqueApp.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +15,8 @@ namespace EstoqueApp.Data
         public DbSet<StockMovement> StockMovements { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<CostCenter> CostCenters { get; set; }
+        public DbSet<StockByCostCenter> StockByCostCenters { get; set; }
+        public DbSet<MeasureUnit> MeasureUnits { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -22,7 +24,7 @@ namespace EstoqueApp.Data
             modelBuilder.ApplyConfiguration(new StockMovementMap());
             modelBuilder.ApplyConfiguration(new CategoryMap());
             modelBuilder.ApplyConfiguration(new CostCenterMap());
-            modelBuilder.ApplyConfiguration(new UnitOfMeasureMap());
+            modelBuilder.ApplyConfiguration(new MeasureUnitMap());
             modelBuilder.ApplyConfiguration(new StockByCostCenterMap());
         }
     }
