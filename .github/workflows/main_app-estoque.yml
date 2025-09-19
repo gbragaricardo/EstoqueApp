@@ -24,8 +24,9 @@ jobs:
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
         with:
-            dotnet-version: '9.x'
+          dotnet-version: '9.x'
         
+
       - name: Install EF Core Tools
         run: dotnet tool install --global dotnet-ef --version 9.* 
 
@@ -57,12 +58,18 @@ jobs:
         with:
           name: .net-app
       
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_A22B1935793D41F69455F206F3E5ACCF }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_97AFA1D4C4524207A331A60EAF323658 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_BDF5881618D54C28B02908DCFB82BD07 }}
+
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'app-estoque'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
           slot-name: 'Production'
           package: .
           
