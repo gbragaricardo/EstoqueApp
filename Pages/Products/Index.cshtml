@@ -11,9 +11,9 @@
       <h1 class="text-3xl font-bold text-gray-800">Produtos</h1>
       <p class="text-gray-500">Gerencie o catálogo de produtos</p>
     </div>
-    <button class="flex items-center gap-2 bg-[#16559F] text-white px-4 py-2 rounded-md hover:bg-gray-300">
+    <a class="flex items-center gap-2 bg-[#16559F] text-white px-4 py-2 rounded-md hover:bg-gray-300" asp-page="AddProduct">
       + Novo Produto
-    </button>
+    </a>
   </div>
 
   <!-- Barra de busca e filtros -->
@@ -115,6 +115,7 @@
                 <th scope="col" class="px-6 py-3">Categoria</th>
                 <th scope="col" class="px-6 py-3">Estoque Min</th>
                 <th scope="col" class="px-6 py-3">Estoque</th>
+                <th scope="col" class="px-6 py-3">Unidade</th>
                 <th scope="col" class="px-6 py-3">Preço</th>
                 <th scope="col" class="px-6 py-3">Status</th>
                 <th scope="col" class="px-6 py-3">Ações</th>
@@ -129,8 +130,9 @@
                     <td class="px-6 py-4">@p.Category?.Name</td>
                     <td class="px-6 py-4">@p.MinStock</td>
                     <td class="px-6 py-4">@p.CurrentStock</td>
+                    <td class="px-6 py-4">@p.MeasureUnit?.Abbreviation</td>
                     <td class="px-6 py-4">@p.UnitPrice.ToString("C")</td>
-                    <td class="px-6 py-4">@p.IsActive</td>
+                    <td class="px-6 py-4">@(p.IsActive ? "Ativo" : "Inativo")</td>
                     <td class="px-6 py-4 flex gap-2">
 
                         <a class="bg-[#009587] text-white p-2 rounded-lg hover:bg-gray-600" asp-page="EditProduct" asp-route-id="@p.Id">Editar</a>
