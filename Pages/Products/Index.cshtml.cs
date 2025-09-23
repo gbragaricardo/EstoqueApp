@@ -37,6 +37,7 @@ namespace EstoqueApp.Pages.Products
             var query = _context.Products
             .Include(p => p.Category)
             .Include(p => p.MeasureUnit)
+            .AsNoTracking()
             .AsQueryable();
 
             //Filtro: TextBox
@@ -64,7 +65,7 @@ namespace EstoqueApp.Pages.Products
                 .ToListAsync();
 
             // Preenche lista de categorias para o filtro
-            Categories = new SelectList(await _context.Categories.ToListAsync(), "Id", "Name");
+            Categories = new SelectList(await _context.Categories.AsNoTracking().ToListAsync(), "Id", "Name");
         }
 
         public async Task<IActionResult> OnPostDeleteAsync(int id)
