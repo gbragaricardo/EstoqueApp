@@ -1,39 +1,116 @@
 ﻿@page
 @model EstoqueApp.Pages.Movements.IndexModel
 @{
+	Layout = "_LayoutNovo";
 }
 
-<section>
+@* <!-- Header da página -->
+<div class="flex items-center justify-between mb-6">
+	<div>
+		<h1 class="text-3xl font-bold text-gray-800">Transações</h1>
+		<p class="text-gray-500">Transações</p>
+	</div>
+	<a class="flex items-center gap-2 bg-[#16559F] text-white px-4 py-2 rounded-md hover:bg-gray-300" asp-page="AddProduct">
+		+ Nova transação
+	</a>
+</div>
 
-    <h1>Movimentações</h1>
 
-    <a class="btn btn-primary mb-3" asp-page="AddMovement">Nova</a>
 
-    <table class="table table-striped">
-        <thead>
+<div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <table class="w-full text-sm text-left text-gray-500">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
             <tr>
-                <th>Tipo</th>
-                <th>Centro de custo</th>
-                <th>Produto</th>
-                <th>Preço</th>
-                <th>Quantidade</th>
-                <th>Ações</th>
+                <th scope="col" class="px-6 py-3">Produto</th>
+                <th scope="col" class="px-6 py-3">SKU</th>
+                <th scope="col" class="px-6 py-3">Categoria</th>
+                <th scope="col" class="px-6 py-3">Estoque Min</th>
+                <th scope="col" class="px-6 py-3">Estoque</th>
+                <th scope="col" class="px-6 py-3">Unidade</th>
+                <th scope="col" class="px-6 py-3">Preço</th>
+                <th scope="col" class="px-6 py-3">Status</th>
+                <th scope="col" class="px-6 py-3">Ações</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var m in Model.Movements)
+            @foreach (var p in Model.Products)
             {
-                <tr>
-                    <td>@m.Type.GetDisplayName()</td>
-                    <td>@m.DestinationCostCenter?.Name</td>
-                    <td>@m.Product?.Name</td>
-                    <td>@m.Quantity</td>
-                    <td>
-                        <a class="btn btn-sm btn-warning" asp-page="EditMovement" asp-route-id="@m.Id">Editar</a>
-                        <a class="btn btn-sm btn-danger" asp-page="Delete" asp-route-id="@m.Id">Excluir</a>
+                <tr class="odd:bg-white even:bg-gray-50 border-b hover:bg-gray-300">
+                    <td class="px-6 py-4 font-medium text-gray-900">@p.Name</td>
+                    <td class="px-6 py-4">@p.Sku</td>
+                    <td class="px-6 py-4">@p.Category?.Name</td>
+                    <td class="px-6 py-4">@p.MinStock</td>
+                    <td class="px-6 py-4">@p.CurrentStock</td>
+                    <td class="px-6 py-4">@p.MeasureUnit?.Abbreviation</td>
+                    <td class="px-6 py-4">@p.UnitPrice.ToString("C")</td>
+                    <td class="px-6 py-4">@(p.IsActive ? "Ativo" : "Inativo")</td>
+                    <td class="px-6 py-4 flex gap-2">
+
+                        <a class="bg-[#009587] text-white p-2 rounded-lg hover:bg-gray-600" asp-page="EditProduct" asp-route-id="@p.Id">Editar</a>
+
+                        <button type="button"
+                                onclick="openModal(this)"
+                                class="bg-[#DB0F19] text-white p-2 rounded-lg hover:bg-gray-600"
+                                data-id="@p.Id"
+                                data-handler="Delete"
+                                data-message="Deseja realmente excluir o produto @p.Name ?">
+                            Excluir
+                        </button>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
-</section>
+</div>
+
+<!-- Paginação -->
+<div class="flex justify-center items-center gap-4 mt-4">
+    <!-- Botão anterior -->
+    @if (Request.Query.ContainsKey("skip") && int.Parse(Request.Query["skip"]) > 0)
+    {
+        var previousSkip = Math.Max(0, int.Parse(Request.Query["skip"]) - 8);
+        <a asp-page="./Index"
+           asp-route-skip="@previousSkip"
+           asp-route-take="8"
+           asp-route-SearchTerm="@Model.SearchTerm"
+           asp-route-CategoryId="@Model.CategoryId"
+           asp-route-IsActive="@Model.IsActive"
+           class="px-4 py-2 bg-gray-200 rounded hover:bg-[#16559F] hover:text-white text-gray-700">
+            ← Anterior
+        </a>
+    }
+    else
+    {
+        <span class="px-4 py-2 bg-gray-100 text-gray-400 rounded">← Anterior</span>
+    }
+
+    <!-- Botão próximo -->
+    @if (Model.Products.Count == 8)
+    {
+        var nextSkip = Request.Query.ContainsKey("skip") ? int.Parse(Request.Query["skip"]) + 8 : 8;
+        <a asp-page="./Index"
+           asp-route-skip="@nextSkip"
+           asp-route-take="8"
+           asp-route-SearchTerm="@Model.SearchTerm"
+           asp-route-CategoryId="@Model.CategoryId"
+           asp-route-IsActive="@Model.IsActive"
+           class="px-4 py-2 bg-gray-200 rounded hover:bg-[#16559F] hover:text-white text-gray-700">
+            Próximo →
+        </a>
+    }
+    else
+    {
+        <span class="px-4 py-2 bg-gray-100 text-gray-400 rounded">Próximo →</span>
+    }
+</div>
+
+<partial name="./Shared/_ConfirmModalPartial" />
+
+@section Scripts {
+    <script>
+        // Toggle dropdown manualmente (sem Flowbite, só JS simples)
+        document.getElementById("dropdownButton").addEventListener("click", function () {
+            document.getElementById("dropdownMenu").classList.toggle("hidden");
+        });
+    </script>
+} *@
