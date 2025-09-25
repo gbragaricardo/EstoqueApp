@@ -28,10 +28,10 @@ namespace EstoqueApp.Pages.CostCenters
                 .Include(s => s.Product)
                 .AsQueryable();
 
-            StockByCCs = query
+            StockByCCs = await query
                 .Skip(skip)
                 .Take(take)
-                .ToList();
+                .ToListAsync();
 
             CostCenters = new SelectList(await _context.CostCenters.ToListAsync(), "Id", "Name");
         }
